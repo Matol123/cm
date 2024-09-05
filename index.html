@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="CitizenMakers" />
+  <title>CitizenMakers</title>
+  <link rel="stylesheet" href="asset/style.css" />
+<script src="https://js.stripe.com/v3/"></script>
+  <div class="nk-app-root">
+    <div class="nk-main">
+      <div class="nk-wrap nk-wrap-nosidebar">
+      <div class="button-container">
+              <a href="https://discord.gg/citizenmakers" class="btn btn-lg btn-primary"><i class="fab fa-discord"></i> Discord</a>
+            </div>
+            <h3 class="title-sttikoo">CitizenMakers</h3>
+
+            <div class="about-us">
+              <h3 class="about-us-title">O nas</h3>
+              <p class="about-us-text">
+                Chciałbyś nauczyć się robić własne citizeny? Dobrze Trafiłeś! Citizen Makers zapewni ci to, znajdziesz wszystko na naszym Discordzie!
+              </p>
+            </div>
+             <hr class="cfel">
+
+
+             <div class="team">
+              <h3 class="team-title">Team</h3>
+              <div class="team-panels">
+                <div class="team-panel">
+                  <div class="team-panel-name2">.matol</div>
+                  <div class="team-panel-name">OWNER OF CITIZEN MAKERS</div>
+                  <img src="https://cdn.discordapp.com/avatars/473786329155764235/a8a349c31b058769c73012c101674f56.webp?size=1024&format=webp&width=0&height=256" alt="Owner">
+                </div>
+                <div class="team-panel">
+                  <div class="team-panel-name2">szzwagier</div>
+                  <div class="team-panel-name">OWNER OF CITIZEN MAKERS</div>
+                  <img src="https://cdn.discordapp.com/attachments/1280218657569509416/1281323322713444484/szwagiernmzz.png?ex=66db4cd5&is=66d9fb55&hm=01338c979974b109067c1006a416f7bff6da6b3672d5a781d5a12dbbb2ee6415&" alt="Owner">
+                </div>
+                <div class="team-panel">
+                  <div class="team-panel-name2">bvbbles_</div>
+                  <div class="team-panel-name">OWNER OF CITIZEN MAKERS</div>
+                  <img src="https://cdn.discordapp.com/avatars/451002940577284096/7b0460ec963ee644559fe25f8525bea8.webp?size=1024&format=webp&width=0&height=256" alt="dev">
+                </div>
+              </div>
+              <hr class="">
+            </div>
+            
+        <hr class="">
+    </div>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		  <div id="payment-container">
+	<h2>Kup program Citizen Maker za 60 PLN</h2>
+	<form id="payment-form">
+    <div id="card-element"></div>
+    <button id="submit">Zapłać teraz</button>
+  </form>
+  <div id="payment-message" hidden></div>
+
+  <script>
+    const stripe = Stripe('pk_live_51Pvf82Ru3lURskBBqsDS72keEHTmUpLcruErjl6sXbrgW0WMlah9VIVsvXPYohK1CeQUPuNa2A7iczzKOBjQ4WfC000mMDwTiI'); 
+
+    const elements = stripe.elements();
+    const cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+
+    const form = document.getElementById('payment-form');
+    const paymentMessage = document.getElementById('payment-message');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+      });
+
+      if (error) {
+        paymentMessage.hidden = false;
+        paymentMessage.textContent = error.message;
+      } else {
+        fetch('/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ payment_method_id: paymentMethod.id })
+        })
+        .then(response => response.json())
+        .then(paymentIntent => {
+          if (paymentIntent.error) {
+            paymentMessage.hidden = false;
+            paymentMessage.textContent = paymentIntent.error;
+          } else {
+            paymentMessage.hidden = false;
+            paymentMessage.textContent = 'Płatność zakończona sukcesem! Aplikacja zaraz się pobierze...';
+            window.location.href = 'https://github.com/Matol123/citizencreator/raw/main/app.exe'; 
+          }
+        })
+        .catch(error => {
+          paymentMessage.hidden = false;
+          paymentMessage.textContent = 'Wystąpił problem podczas przetwarzania płatności.';
+        });
+      }
+    });
+  </script>
+  		</div>
+</footer>
+
+  </div>
+</body>
+</html>
