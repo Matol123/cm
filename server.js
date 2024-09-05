@@ -9,7 +9,7 @@ app.post('/create-payment-intent', async (req, res) => {
     const { payment_method_id } = req.body;
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 6000, // 60 PLN w groszach
+      amount: 5000, // 50 PLN w groszach
       currency: 'pln',
       payment_method: payment_method_id,
       confirmation_method: 'manual',
